@@ -267,7 +267,7 @@ gotest: $(GODEP_OVERRIDES) | $(DEPS)
 	$(BUILD) $(GODEP_CMD) $(GO) test -v ./...
 
 .PHONY: clean
-clean: $(CLEAN_DEPS)
+clean:
 	rm -f $(APP_NAME) *.stamp $(GOPATH)/$(MODULE_SRC)/*.stamp
-	rm -rf $(DEFAULT_GOPATH)
+	rm -rf $(DEFAULT_GOPATH) $(CLEAN_DEPS)
 
