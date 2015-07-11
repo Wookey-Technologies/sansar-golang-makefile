@@ -259,8 +259,6 @@ gobuild: $(GODEP_OVERRIDES) | $(DEPS)
 	$(BUILD) $(GODEP_CMD) $(GO) install -v
 	cp $(GOPATH)/bin/$(APP_NAME) .
 
-$(info $(DEPS))
-
 .PHONY: gotest
 gotest: PATH:=$(GOPATH)/bin:$(PATH)
 gotest: $(GODEP_OVERRIDES) | $(DEPS)
