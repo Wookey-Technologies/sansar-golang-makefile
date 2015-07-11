@@ -223,11 +223,11 @@ gosave: godep_gosave $(WRAPPER_GOSAVE) | $(DEPS)
 # make goupdate URI=github.com/lindenlab/sansar-utils-golang/models/...
 ## to bring models changes to match REV
 .PHONY: goupdate
-goupdate: PATH=$(GOPATH)/bin:$(PATH)
-goupdate: GODEPURI=$(patsubst %/...,%,$(URI))
-goupdate: EMPTY=
-goupdate: SPACE=$(EMPTY) $(EMPTY)
-goupdate: PIPE=$(EMPTY)\\\|$(EMPTY)
+goupdate: PATH:=$(GOPATH)/bin:$(PATH)
+goupdate: GODEPURI:=$(patsubst %/...,%,$(URI))
+goupdate: EMPTY:=
+goupdate: SPACE:=$(EMPTY) $(EMPTY)
+goupdate: PIPE:=$(EMPTY)\\\|$(EMPTY)
 goupdate: | $(DEPS)
 	test -e $(DEFAULT_GOPATH)/src/$(GODEPURI) && \
 		mkdir -p Godeps/_workspace/src/$(GODEPURI) && \
