@@ -42,7 +42,7 @@ $(foreach module,$(MODULE_OVERRIDES),$(eval $(call MODULE_OVERRIDE,$(module))))
 ifneq (,$(WRAPPER_VERSION))
 ### Backend Go Wrapper Configuration
 # Set which wrapper configuration to retreive.
-BUILD_IMAGE_BASE ?= golang:1.4-swig
+BUILD_IMAGE_BASE ?= golang:1.6-swig
 WRAPPER_BRANCH ?= Backend   # By default, pull latest from this branch.
 WRAPPER_IMAGE ?= sansar/golang-cpp
 WRAPPER_MODULE ?= backend-golang-cpp
@@ -52,7 +52,7 @@ WRAPPER_TAG := $(WRAPPER_CONFIGURATION)_$(WRAPPER_COMPILER)_$(WRAPPER_VERSION)_$
 
 BACKEND_MODULE = $(LINDEN_MODULES)/$(WRAPPER_MODULE)
 WRAPPERS = $(GOPATH)/src/$(BACKEND_MODULE)
-WORKSPACE=$(THIS_DIR)/Godeps/_workspace
+WORKSPACE=$(THIS_DIR)/vendor
 GODEP_WRAPPERS = $(WORKSPACE)/pkg/linux_amd64/$(BACKEND_MODULE)
 define GET_WRAPPERS
 $(1): $(GOPATH)/$(MODULE_SRC)
@@ -80,7 +80,7 @@ GODEP_OVERRIDES = $(GODEP_WRAPPERS)
 endif
 
 else
-BUILD_IMAGE_BASE ?= golang:1.4
+BUILD_IMAGE_BASE ?= golang:1.6
 endif
 
 #### End Module Overrides
@@ -119,7 +119,7 @@ $(GODEP_BIN):
 else
 
 ###### Docker Configuration
-# Base image for our dev build image.  We are using :1.4-swig since :1.4 doesn't
+# Base image for our dev build image.  We are using :1.6-swig since :1.6 doesn't
 # link against -lstdc++ 
 UID := $(shell id -u)
 GID := $(shell id -g)
@@ -212,7 +212,7 @@ gosave: godep_gosave $(WRAPPER_GOSAVE) | $(DEPS)
 ### Godep Update
 # update a godep path as URI
 ## Copy over the container's GOPATH godep get src/$(URI)
-# and move it over to local repo Godeps/_workspace/src
+# and move it over to local repo vendor/src
 ## Then attempts to update Godeps/Godeps.json in place
 # Will only work for updating from last 10 revisions to current revision
 ## Also, a side effect may be changes to a REV for another package, be sure to check diffs
@@ -230,8 +230,8 @@ goupdate: SPACE:=$(EMPTY) $(EMPTY)
 goupdate: PIPE:=$(EMPTY)\\\|$(EMPTY)
 goupdate: | $(DEPS)
 	test -e $(DEFAULT_GOPATH)/src/$(GODEPURI) && \
-		mkdir -p Godeps/_workspace/src/$(GODEPURI) && \
-		cp -r $(DEFAULT_GOPATH)/src/$(GODEPURI)/*.go Godeps/_workspace/src/$(GODEPURI) && \
+		mkdir -p Godeps/vendor/src/$(GODEPURI) && \
+		cp -r $(DEFAULT_GOPATH)/src/$(GODEPURI)/*.go Godeps/vendor/src/$(GODEPURI) && \
 		OLDREV=$$( cd $(DEFAULT_GOPATH)/src/$(GODEPURI) && git rev-parse HEAD^^ ) && \
 		REV=$$( cd $(DEFAULT_GOPATH)/src/$(GODEPURI) && git rev-parse HEAD ) && \
 		REVHIST=\($$( cd $(DEFAULT_GOPATH)/src/$(GODEPURI) && git log --pretty="%H" -10 | xargs echo -n  | sed -e "s/$(SPACE)/$(PIPE)/g" )\) && \
