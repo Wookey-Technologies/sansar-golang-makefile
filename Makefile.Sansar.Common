@@ -8,6 +8,7 @@ MODULE_SRC := src/$(MODULE_NAME)
 DOCKER_REGISTRY ?= registry.docker
 
 ### Go Configuration
+GOLANG_VERSION ?= 1.4
 # Define work area.
 DEFAULT_GOPATH = /tmp/gobuild-$(APP_NAME)-$(USER)
 export GOPATH ?= $(DEFAULT_GOPATH)
@@ -39,16 +40,17 @@ endef
 
 $(foreach module,$(MODULE_OVERRIDES),$(eval $(call MODULE_OVERRIDE,$(module))))
 
+
 ifneq (,$(WRAPPER_VERSION))
 ### Backend Go Wrapper Configuration
 # Set which wrapper configuration to retreive.
-BUILD_IMAGE_BASE ?= golang:1.4-swig
+BUILD_IMAGE_BASE ?= golang:$(GOLANG_VERSION)-swig
 WRAPPER_BRANCH ?= Backend   # By default, pull latest from this branch.
 WRAPPER_IMAGE ?= sansar/golang-cpp
 WRAPPER_MODULE ?= backend-golang-cpp
 WRAPPER_COMPILER ?= gcc
 WRAPPER_CONFIGURATION ?= debug
-WRAPPER_TAG := $(WRAPPER_CONFIGURATION)_$(WRAPPER_COMPILER)_$(WRAPPER_VERSION)_$(WRAPPER_BRANCH)
+WRAPPER_TAG := $(WRAPPER_CONFIGURATION)_$(WRAPPER_COMPILER)_golang$(GOLANG_VERSION)_$(WRAPPER_VERSION)_$(WRAPPER_BRANCH)
 
 BACKEND_MODULE = $(LINDEN_MODULES)/$(WRAPPER_MODULE)
 WRAPPERS = $(GOPATH)/src/$(BACKEND_MODULE)
@@ -56,8 +58,8 @@ WORKSPACE=$(THIS_DIR)/Godeps/_workspace
 GODEP_WRAPPERS = $(WORKSPACE)/pkg/linux_amd64/$(BACKEND_MODULE)
 define GET_WRAPPERS
 $(1): $(GOPATH)/$(MODULE_SRC)
-	@echo 'Pulling: $(DOCKER_REGISTRY)/$(WRAPPER_IMAGE):$(WRAPPER_TAG)'
-	@cd $(2) && curl -sk https://$(DOCKER_REGISTRY)/v1/images/$$(shell curl -sk https://$(DOCKER_REGISTRY)/v1/repositories/$(WRAPPER_IMAGE)/tags/$(WRAPPER_TAG) | cut -d'"' -f2)/layer | tar --strip-components=1 -xz
+	docker pull $(DOCKER_REGISTRY)/$(WRAPPER_IMAGE):$(WRAPPER_TAG)
+	docker save $(DOCKER_REGISTRY)/$(WRAPPER_IMAGE):$(WRAPPER_TAG) | tar -xv --wildcards --to-stdout */layer.tar | tar --strip-components=1 -xv
 endef
 $(eval $(call GET_WRAPPERS,$(WRAPPERS),$(GOPATH)))
 $(eval $(call GET_WRAPPERS,$(GODEP_WRAPPERS),$(WORKSPACE)))
@@ -80,7 +82,7 @@ GODEP_OVERRIDES = $(GODEP_WRAPPERS)
 endif
 
 else
-BUILD_IMAGE_BASE ?= golang:1.4
+BUILD_IMAGE_BASE ?= golang:$(GOLANG_VERSION)
 endif
 
 #### End Module Overrides
@@ -119,8 +121,8 @@ $(GODEP_BIN):
 else
 
 ###### Docker Configuration
-# Base image for our dev build image.  We are using :1.4-swig since :1.4 doesn't
-# link against -lstdc++ 
+# Base image for our dev build image.  We are using :$(GOLANG_VERSION)-swig since 
+# :$(GOLANG_VERSION) doesn't link against -lstdc++ 
 UID := $(shell id -u)
 GID := $(shell id -g)
 USERNAME := $(shell getent passwd $(UID) | cut -d: -f1)
