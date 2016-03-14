@@ -8,7 +8,6 @@ MODULE_SRC := src/$(MODULE_NAME)
 DOCKER_REGISTRY ?= registry.docker
 
 ### Go Configuration
-GOLANG_VERSION ?= 1.4
 # Define work area.
 DEFAULT_GOPATH = /tmp/gobuild-$(APP_NAME)-$(USER)
 export GOPATH ?= $(DEFAULT_GOPATH)
@@ -40,6 +39,7 @@ endef
 
 $(foreach module,$(MODULE_OVERRIDES),$(eval $(call MODULE_OVERRIDE,$(module))))
 
+GOLANG_MINOR_VERSION ?= 1.4
 
 ifneq (,$(WRAPPER_VERSION))
 ### Backend Go Wrapper Configuration
@@ -50,7 +50,7 @@ WRAPPER_IMAGE ?= sansar/golang-cpp
 WRAPPER_MODULE ?= backend-golang-cpp
 WRAPPER_COMPILER ?= gcc
 WRAPPER_CONFIGURATION ?= debug
-WRAPPER_TAG := $(WRAPPER_CONFIGURATION)_$(WRAPPER_COMPILER)_golang$(GOLANG_VERSION)_$(WRAPPER_VERSION)_$(WRAPPER_BRANCH)
+WRAPPER_TAG := $(WRAPPER_CONFIGURATION)_$(WRAPPER_COMPILER)_golang$(GOLANG_MINOR_VERSION)_$(WRAPPER_VERSION)_$(WRAPPER_BRANCH)
 
 BACKEND_MODULE = $(LINDEN_MODULES)/$(WRAPPER_MODULE)
 WRAPPERS = $(GOPATH)/src/$(BACKEND_MODULE)
@@ -82,7 +82,7 @@ GODEP_OVERRIDES = $(GODEP_WRAPPERS)
 endif
 
 else
-BUILD_IMAGE_BASE ?= golang:$(GOLANG_VERSION)
+BUILD_IMAGE_BASE ?= golang:$(GOLANG_MINOR_VERSION)
 endif
 
 #### End Module Overrides
@@ -121,8 +121,8 @@ $(GODEP_BIN):
 else
 
 ###### Docker Configuration
-# Base image for our dev build image.  We are using :$(GOLANG_VERSION)-swig since 
-# :$(GOLANG_VERSION) doesn't link against -lstdc++ 
+# Base image for our dev build image.  We are using :$(GOLANG_MINOR_VERSION)-swig since 
+# :$(GOLANG_MINOR_VERSION) doesn't link against -lstdc++ 
 UID := $(shell id -u)
 GID := $(shell id -g)
 USERNAME := $(shell getent passwd $(UID) | cut -d: -f1)
