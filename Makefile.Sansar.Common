@@ -44,7 +44,7 @@ GOLANG_MINOR_VERSION ?= 1.4
 ifneq (,$(WRAPPER_VERSION))
 ### Backend Go Wrapper Configuration
 # Set which wrapper configuration to retreive.
-BUILD_IMAGE_BASE ?= golang:$(GOLANG_VERSION)-swig
+BUILD_IMAGE_BASE ?= golang:$(GOLANG_MINOR_VERSION)-swig
 WRAPPER_BRANCH ?= Backend   # By default, pull latest from this branch.
 WRAPPER_IMAGE ?= sansar/golang-cpp
 WRAPPER_MODULE ?= backend-golang-cpp
