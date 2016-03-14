@@ -59,7 +59,7 @@ GODEP_WRAPPERS = $(WORKSPACE)/pkg/linux_amd64/$(BACKEND_MODULE)
 define GET_WRAPPERS
 $(1): $(GOPATH)/$(MODULE_SRC)
 	docker pull $(DOCKER_REGISTRY)/$(WRAPPER_IMAGE):$(WRAPPER_TAG)
-	docker save $(DOCKER_REGISTRY)/$(WRAPPER_IMAGE):$(WRAPPER_TAG) | tar -xv --wildcards --to-stdout */layer.tar | tar --strip-components=1 -xv
+	cd "$(2)" && docker save $(DOCKER_REGISTRY)/$(WRAPPER_IMAGE):$(WRAPPER_TAG) | tar -xv --wildcards --to-stdout */layer.tar | tar --strip-components=1 -xv
 endef
 $(eval $(call GET_WRAPPERS,$(WRAPPERS),$(GOPATH)))
 $(eval $(call GET_WRAPPERS,$(GODEP_WRAPPERS),$(WORKSPACE)))
