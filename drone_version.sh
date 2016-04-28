@@ -21,7 +21,7 @@ if [[ $DRONE ]]; then
         -e 's/    commitID string = *$/    commitID string = \"$COMMIT_ID\"/' \
         -e 's/    buildID string = *$/    buildID string = \"$DRONE_BUILD_NUMBER\"/' \
         -e 's/    branch string = *$/    branch string = $DRONE_BRANCH/' \
-        -e 's/    image string = *$/    image string = registry.docker/$DRONE_DOCKER_IMAGE/' \
+        -e 's/    image string = *$/    image string = registry.docker\/$DRONE_DOCKER_IMAGE/' \
         -e 's/    buildTime string = *$/    buildtime string = \"$NOW\"/' \
     version.go
 else
