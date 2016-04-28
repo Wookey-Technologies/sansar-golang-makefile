@@ -256,6 +256,7 @@ goget: $(GO_OVERRIDES) | $(DEPS)
 .PHONY: gobuild
 gobuild: PATH:=$(GOPATH)/bin:$(PATH)
 gobuild: $(GODEP_OVERRIDES) | $(DEPS)
+	$(THIS_DIR)/sansar-golang-makefile/drone_version.sh
 	$(BUILD) $(GODEP_CMD) $(GO) install -v
 	cp $(GOPATH)/bin/$(APP_NAME) .
 
