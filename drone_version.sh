@@ -29,7 +29,7 @@ if [[ $DRONE ]]; then
         -e "s/const commitID string = .*$/const commitID string = \""$COMMIT_ID"\"/" \
         -e "s/const buildID string = .*$/const buildID string = \""$DRONE_BUILD_NUMBER"\"/" \
         -e "s/const branch string = .*$/const branch string = \""$DRONE_BRANCH"\"/" \
-        -e "s/const image string = .*$/const image string = \""$DOCKER_IMAGE_FOR_SED"\"/" \
+        -e "s/const image string = .*$/const image string = \""$DOCKER_IMAGE_FOR_SED"-"$DRONE_COMMIT"\"/" \
         -e "s/const buildTime string = .*$/const buildTime string = \""$NOW"\"/" \
     version.go
     cat version.go
