@@ -42,7 +42,7 @@ $(foreach module,$(MODULE_OVERRIDES),$(eval $(call MODULE_OVERRIDE,$(module))))
 ifneq (,$(WRAPPER_VERSION))
 ### Backend Go Wrapper Configuration
 # Set which wrapper configuration to retreive.
-BUILD_IMAGE_BASE ?= golang:1.6-swig
+BUILD_IMAGE_BASE ?= golang:1.7-swig
 WRAPPER_BRANCH ?= Backend   # By default, pull latest from this branch.
 WRAPPER_IMAGE ?= sansar/golang-cpp
 WRAPPER_MODULE ?= backend-golang-cpp
@@ -80,7 +80,7 @@ GODEP_OVERRIDES = $(GODEP_WRAPPERS)
 endif
 
 else
-BUILD_IMAGE_BASE ?= golang:1.6
+BUILD_IMAGE_BASE ?= golang:1.7
 endif
 
 #### End Module Overrides
@@ -119,7 +119,7 @@ $(GODEP_BIN):
 else
 
 ###### Docker Configuration
-# Base image for our dev build image.  We are using :1.6-swig since :1.6 doesn't
+# Base image for our dev build image.  We are using :1.7-swig since :1.7 doesn't
 # link against -lstdc++ 
 UID := $(shell id -u)
 GID := $(shell id -g)
