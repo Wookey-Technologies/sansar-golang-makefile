@@ -41,33 +41,8 @@ $(foreach module,$(MODULE_OVERRIDES),$(eval $(call MODULE_OVERRIDE,$(module))))
 
 ifneq (,$(WRAPPER_VERSION))
 ### Backend Go Wrapper Configuration
-# Set which wrapper configuration to retreive.
-BUILD_IMAGE_BASE ?= golang:1.8-swig
-WRAPPER_BRANCH ?= Backend   # By default, pull latest from this branch.
-WRAPPER_IMAGE ?= sansar/golang-cpp
-WRAPPER_MODULE ?= backend-golang-cpp
-WRAPPER_COMPILER ?= gcc
-WRAPPER_CONFIGURATION ?= debug
-WRAPPER_TAG := $(WRAPPER_CONFIGURATION)_$(WRAPPER_COMPILER)_$(WRAPPER_VERSION)_$(WRAPPER_BRANCH)
-
-BACKEND_MODULE = $(LINDEN_MODULES)/$(WRAPPER_MODULE)
-WRAPPERS = $(GOPATH)/src/$(BACKEND_MODULE)
-WORKSPACE=$(THIS_DIR)/vendor
-GODEP_WRAPPERS = $(WORKSPACE)/pkg/linux_amd64/$(BACKEND_MODULE)
-define GET_WRAPPERS
-$(1): $(GOPATH)/$(MODULE_SRC)
-	@echo 'Pulling: $(DOCKER_REGISTRY)/$(WRAPPER_IMAGE):$(WRAPPER_TAG)'
-	@cd $(2) && curl -sk https://$(DOCKER_REGISTRY)/v1/images/$$(shell curl -sk https://$(DOCKER_REGISTRY)/v1/repositories/$(WRAPPER_IMAGE)/tags/$(WRAPPER_TAG) | cut -d'"' -f2)/layer | tar --strip-components=1 -xz
-endef
-$(eval $(call GET_WRAPPERS,$(WRAPPERS),$(GOPATH)))
-$(eval $(call GET_WRAPPERS,$(GODEP_WRAPPERS),$(WORKSPACE)))
-
-# Convenience function to update wrappers.
-.PHONY: wrappers gowrappers
-gowrappers: wrappers
-wrappers:
-	rm -rf $(WRAPPERS)
-	$(MAKE) $(WRAPPERS)
+# Set which wrapper configuration to retrieve.
+BUILD_IMAGE_BASE ?= golang:1.8
 
 gosave_wrappers:
 	REV=$$(cd $(WRAPPERS) && git rev-parse HEAD) && \
