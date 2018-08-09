@@ -20,7 +20,7 @@ else
 GODEP_CMD = godep
 endif
 
-# Not usually overriden.  Can be get to a different go command.
+# Not usually overriden.  Can be set to a different go command.
 GO ?= go
 
 ### Default target.
@@ -42,7 +42,7 @@ $(foreach module,$(MODULE_OVERRIDES),$(eval $(call MODULE_OVERRIDE,$(module))))
 ifneq (,$(WRAPPER_VERSION))
 ### Backend Go Wrapper Configuration
 # Set which wrapper configuration to retreive.
-BUILD_IMAGE_BASE ?= golang:1.7-swig
+BUILD_IMAGE_BASE ?= ll-lang/gobuild:1.10.3
 WRAPPER_BRANCH ?= Backend   # By default, pull latest from this branch.
 WRAPPER_IMAGE ?= sansar/golang-cpp
 WRAPPER_MODULE ?= backend-golang-cpp
@@ -80,7 +80,7 @@ GODEP_OVERRIDES = $(GODEP_WRAPPERS)
 endif
 
 else
-BUILD_IMAGE_BASE ?= golang:1.7
+BUILD_IMAGE_BASE ?= ll-lang/gobuild:1.10.3
 endif
 
 #### End Module Overrides
