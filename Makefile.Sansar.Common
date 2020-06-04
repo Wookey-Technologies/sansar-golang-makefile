@@ -2,7 +2,7 @@ THIS_DIR := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
 ### Shared Project configuration
 # Configure repository
 LINDEN_RCS := github.com
-LINDEN_MODULES := $(LINDEN_RCS)/lindenlab
+LINDEN_MODULES := $(LINDEN_RCS)/Wookey-Technologies
 MODULE_NAME := $(LINDEN_MODULES)/$(APP_NAME)
 MODULE_SRC := src/$(MODULE_NAME)
 DOCKER_REGISTRY ?= registry.docker
@@ -220,9 +220,9 @@ gosave: godep_gosave $(WRAPPER_GOSAVE) | $(DEPS)
 ## Also, a side effect may be changes to a REV for another package, be sure to check diffs
 # and if applicable, also update the other effected package (so src is updated to match revision).
 ## ex.
-# make goupdate URI=github.com/lindenlab/sansar-utils-golang/client/...
+# make goupdate URI=github.com/Wookey-Technologies/sansar-utils-golang/client/...
 ## also changes REV for .../sansar-utils-golang/models/... 
-# make goupdate URI=github.com/lindenlab/sansar-utils-golang/models/...
+# make goupdate URI=github.com/Wookey-Technologies/sansar-utils-golang/models/...
 ## to bring models changes to match REV
 .PHONY: goupdate
 goupdate: PATH:=$(GOPATH)/bin:$(PATH)
