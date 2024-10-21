@@ -122,7 +122,7 @@ else
 
 ###### Docker Configuration
 # Base image for our dev build image.  We are using :1.7-swig since :1.7 doesn't
-# link against -lstdc++ 
+# link against -lstdc++
 UID := $(shell id -u)
 GID := $(shell id -g)
 USERNAME := $(shell getent passwd $(UID) | cut -d: -f1)
@@ -149,9 +149,9 @@ endif
 ## Configures SSH, if we are passing through ssh-agent.
 ## Sets the module's source location as the working directory.
 define DOCKERFILE
-FROM $(DOCKER_REGISTRY)/$(BUILD_IMAGE_BASE)  
+FROM $(DOCKER_REGISTRY)/$(BUILD_IMAGE_BASE)
 RUN ( groupadd --gid $(GID) $(GROUPNAME) || true ) && \
-    useradd --uid $(UID) --home-dir /home/$(USERNAME) $(USERNAME) -g $(GROUPNAME) && \
+    ( useradd --uid $(UID) --home-dir /home/$(USERNAME) $(USERNAME) -g $(GROUPNAME) || true ) && \
     mkdir -p /home/$(USERNAME)/.ssh "/go/$(MODULE_SRC)" && \
     chmod 700 /home/$(USERNAME)/.ssh && \
     chown -R $(USERNAME):$(GROUPNAME) /go /home/$(USERNAME)
@@ -221,7 +221,7 @@ gosave: godep_gosave $(WRAPPER_GOSAVE) | $(DEPS)
 # and if applicable, also update the other effected package (so src is updated to match revision).
 ## ex.
 # make goupdate URI=github.com/Wookey-Technologies/sansar-utils-golang/client/...
-## also changes REV for .../sansar-utils-golang/models/... 
+## also changes REV for .../sansar-utils-golang/models/...
 # make goupdate URI=github.com/Wookey-Technologies/sansar-utils-golang/models/...
 ## to bring models changes to match REV
 .PHONY: goupdate
